@@ -1,0 +1,8 @@
+*.a
+*.kate-swp
+*.o
+*.obj
+*.out
+*.so
+*.so.*
+*.swp
