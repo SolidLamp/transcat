@@ -1,3 +1,7 @@
+build/
+dist/
+zig-out/
+
 *.a
 *.kate-swp
 *.o
@@ -6,3 +10,4 @@
 *.so
 *.so.*
 *.swp
+*.zig-cache
