@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "flags.h"
+
 int display(FILE* fp, uint32_t colours[], int colour_len);
 FILE* findfile(char* name[]);
 int main(int argc, char* argv[]);
@@ -25,7 +27,6 @@ int display(FILE* fp, uint32_t colours[], int colour_len)
     int colour_index = 0;
 
     if (fp == NULL) {
-        perror("Error opening file");
         return 1;
     }
 
@@ -62,13 +63,10 @@ FILE* findfile(char* name[])
 {
     FILE* fp;
     if (access(*name, R_OK) != 0) {
-        printf("TODO");
         return NULL;
     }
     fp = fopen(*name, "r");
     if (fp == NULL) {
-        perror("Error opening file");
-        fprintf(stderr, "Error opening file.");
         return NULL;
     }
     return fp;
@@ -84,11 +82,20 @@ FILE* findfile(char* name[])
 int main(int argc, char* argv[])
 {
     int i;
+    uint32_t arr[5];
     /* int arr[] = { 0x70707000, 0xB4707000, 0xB470B400, 0xB4B4B400, 0x7070B400, 0xB4B47000, 0x70B4B400 }; */
-    uint32_t arr[] = { 0x5BCEFA00, 0xF5A9B800, 0xffffff00, 0xF5A9B800, 0x5BCEFA00 };
+    /* uint32_t arr[] = { 0x5BCEFA00, 0xF5A9B800, 0xffffff00, 0xF5A9B800, 0x5BCEFA00 }; */
+    FLAG flag = get_flag("trans", 6);
+
+    memcpy(arr, flag.colours, 5 * sizeof(uint32_t));
 
     if (argc == 1 && !isatty(fileno(stdin))) {
-        display(stdin, arr, 5);
+        int success;
+        success = display(stdin, arr, 5);
+        if (success == 1) {
+            perror("Error opening file");
+            return 1;
+        }
     }
 
     for (i = 1; i < argc; ++i) {
@@ -96,6 +103,9 @@ int main(int argc, char* argv[])
         if (fp != NULL) {
             display(fp, arr, 5);
             fclose(fp);
+        } else {
+            perror("Cannot open file");
+            return 1;
         }
     }
     return 0;
