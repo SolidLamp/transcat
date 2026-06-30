@@ -1,0 +1,5 @@
+.{
+    .name = "lesbian",
+    .colours = .{ 0xd42c0000, 0xfd985500, 0xffffff00, 0xd161a200, 0xa2016100 }
+}
+

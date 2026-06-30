@@ -96,15 +96,15 @@ int main(int argc, char* argv[])
     static struct option long_options[] = {
         {"trans",        no_argument,       0, 't'},
         {"transgender",  no_argument,       0, 't'},
+        {"lesbian",  no_argument,           0, 'l'},
         {0,              0,                 0,  0 }
     };
 
-    while ((ch = getopt_long(argc, argv, "t", long_options, NULL)) != -1) {
+    while ((ch = getopt_long(argc, argv, "tl", long_options, NULL)) != -1) {
         switch (ch) {
         case 't':
-            flag_name = 't';
-            break;
-        case 'a':
+        case 'l':
+            flag_name = ch;
             break;
         case '?':
             invalid_option = 1;
