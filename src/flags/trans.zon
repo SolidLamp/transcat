@@ -1,0 +1,5 @@
+.{
+    .name = "transgender",
+    .colours = .{ 0x5BCEFA00, 0xF5A9B800, 0xffffff00, 0xF5A9B800, 0x5BCEFA00 }
+}
+
