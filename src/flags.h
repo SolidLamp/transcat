@@ -10,6 +10,6 @@ typedef struct {
     uint32_t colours[5];
 } FLAG;
 
-inline FLAG get_flag(char* string, size_t len);
+FLAG get_flag(char string);
 
 #endif

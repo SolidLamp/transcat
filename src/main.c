@@ -2,8 +2,10 @@
  * Transcat - A cat program which colours stdin with the transgender flag.
  */
 
+#include <getopt.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "flags.h"
@@ -82,14 +84,44 @@ FILE* findfile(char* name[])
 int main(int argc, char* argv[])
 {
     int i;
+    int remaining_elements;
+    char ch;
     uint32_t arr[5];
-    /* int arr[] = { 0x70707000, 0xB4707000, 0xB470B400, 0xB4B4B400, 0x7070B400, 0xB4B47000, 0x70B4B400 }; */
-    /* uint32_t arr[] = { 0x5BCEFA00, 0xF5A9B800, 0xffffff00, 0xF5A9B800, 0x5BCEFA00 }; */
-    FLAG flag = get_flag("trans", 6);
+    FLAG flag;
+
+    uint8_t invalid_option = 0;
+    char flag_name = 't';
+    int option_index = 0;
+
+    static struct option long_options[] = {
+        {"trans",        no_argument,       0, 't'},
+        {"transgender",  no_argument,       0, 't'},
+        {0,              0,                 0,  0 }
+    };
+
+    while ((ch = getopt_long(argc, argv, "t", long_options, NULL)) != -1) {
+        switch (ch) {
+        case 't':
+            flag_name = 't';
+            break;
+        case 'a':
+            break;
+        case '?':
+            invalid_option = 1;
+            break;
+        }
+    }
+
+    if (invalid_option) {
+        printf("Error: Unrecognised Option. Quit.");
+        exit(3);
+    }
+
+    flag = get_flag(flag_name);
 
     memcpy(arr, flag.colours, 5 * sizeof(uint32_t));
 
-    if (argc == 1 && !isatty(fileno(stdin))) {
+    if (remaining_elements == 0 && !isatty(fileno(stdin))) {
         int success;
         success = display(stdin, arr, 5);
         if (success == 1) {
@@ -98,7 +130,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    for (i = 1; i < argc; ++i) {
+    for (i = optind; i < argc; ++i) {
         FILE* fp = findfile(argv + i);
         if (fp != NULL) {
             display(fp, arr, 5);
